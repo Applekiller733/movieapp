@@ -30,14 +30,14 @@ public:
 
     bool add_watch_s(std::string title, std::string genre, int year, int likes, std::string trailer);
 
-    DynamicVector* getList_s();
+    std::vector<Movie>* getList_s();
 
-    DynamicVector* getwatchlist_s();
+    std::vector<Movie>* getwatchlist_s();
 
-    DynamicVector movies_by_genre(std::string genre);
+    std::vector<Movie> movies_by_genre(std::string genre);
 
-    void read_from_json(std::string typelist);
-    void write_to_json(std::string typelist);
+    void read_from_json(std::string typelist, std::string filename);
+    void write_to_json(std::string typelist, std::string filename);
 };
 
 #endif //LAB4_SERVICES_H

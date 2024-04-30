@@ -17,4 +17,6 @@ add_executable(lab4 main.cpp
         Services/servicestests.cpp
         Services/servicestests.h
         Domain/jsondomaintest.cpp
-        Domain/jsondomaintest.h)
+        Domain/jsondomaintest.h
+        Services/jsonservicestests.cpp
+        Services/jsonservicestests.h)

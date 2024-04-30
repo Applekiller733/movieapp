@@ -49,22 +49,22 @@ Services::update_s(std::string title, int year, std::string newtitle, std::strin
     return false;
 }
 
-DynamicVector* Services::getList_s() {
+std::vector<Movie>* Services::getList_s() {
     return this->repo.getList();
 }
 
-DynamicVector *Services::getwatchlist_s() {
+std::vector<Movie> *Services::getwatchlist_s() {
     return this->repo.getwatchlist();
 }
 
-DynamicVector Services::movies_by_genre(std::string genre) {
-    DynamicVector* v = this->getList_s();
-    DynamicVector res(0);
-    for ( int ind = 0; ind < v->length(); ind++)
+std::vector<Movie> Services::movies_by_genre(std::string genre) {
+    std::vector<Movie>* v = this->getList_s();
+    std::vector<Movie> res;
+    for ( int ind = 0; ind < v->size(); ind++)
     {
-        Movie mov = v->getElem(ind);
-        if ( mov.getGenre() == genre)
-            res.add(mov);
+        Movie mov = v->at(ind);
+        if ( mov.getGenre() == genre || genre == "")
+            res.push_back(mov);
     }
     return res;
 }
@@ -73,8 +73,8 @@ bool Services::add_watch_s(std::string title, std::string genre, int year, int l
     this->repo.add_to_watch(title, genre, year, likes, trailer);
 }
 
-void Services::write_to_json(std::string typelist) {
-    DynamicVector* v;
+void Services::write_to_json(std::string typelist, std::string filename) {
+    std::vector<Movie>* v;
     if (typelist == "movielist")
         v = this->getList_s();
     else if (typelist == "watchlist")
@@ -83,33 +83,34 @@ void Services::write_to_json(std::string typelist) {
         return;
 
     nlohmann::json jarr = nlohmann::json::array();
-    for (int i=0; i < v->length(); i++){
+    for (int i=0; i < v->size(); i++){
         nlohmann::json obj;
-        obj["title"] = v->getElem(i).getTitle();
-        obj["genre"] = v->getElem(i).getGenre();
-        obj["year"] = v->getElem(i).getYear();
-        obj["likes"] = v->getElem(i).getLikes();
-        obj["trailer"] = v->getElem(i).getTrailer();
+        Movie mov = v->at(i);
+        obj["title"] = mov.getTitle();
+        obj["genre"] = mov.getGenre();
+        obj["year"] = mov.getYear();
+        obj["likes"] = mov.getLikes();
+        obj["trailer"] = mov.getTrailer();
         jarr.push_back(obj);
     }
 
     if (typelist == "movielist") {
-        std::ofstream out("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/movielist.json");
+        std::ofstream out("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/"+filename);
         out << jarr;
         out.close();
     }
     else{
-        std::ofstream out("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/watchlist.json");
+        std::ofstream out("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/"+filename);
         out << jarr;
         out.close();
     }
 }
 
-void Services::read_from_json(std::string typelist) {
+void Services::read_from_json(std::string typelist, std::string filename) {
 
         nlohmann::json jarr = nlohmann::json::array();
         if (typelist == "movielist") {
-            std::ifstream in("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/movielist.json");
+            std::ifstream in("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/"+filename);
             jarr = nlohmann::json::parse(in);
             in.close();
             for (auto i = jarr.begin(); i < jarr.end(); i++){
@@ -119,7 +120,7 @@ void Services::read_from_json(std::string typelist) {
             }
         }
         else if (typelist == "watchlist"){
-            std::ifstream in("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/watchlist.json");
+            std::ifstream in("/home/zelu/CLionProjects/OOP/lab4/JSONsaves/"+filename);
             jarr = nlohmann::json::parse(in);
             in.close();
             for (auto i = jarr.begin(); i < jarr.end(); i++){

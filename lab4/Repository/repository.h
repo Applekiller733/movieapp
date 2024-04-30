@@ -7,21 +7,21 @@
 
 #include "../Domain/domain.h"
 #include <string>
+#include <iostream>
 
 
-
-class DynamicVector{
+template <typename TElem> class DynamicVector{
 
     friend class Repository;
 private:
 
-    Movie* elems;
+    TElem* elems;
     int capacity;
     int size;
 
-    int findIndex(std::string title, int year);
+//    int findIndex(std::string title, int year);
 
-    void copyElem(int index, Movie elem);
+    //void copyElem(int index, Movie elem);
 
     void debugPrint();
 
@@ -33,14 +33,15 @@ public:
 
     DynamicVector(int capacity); // param constructor
 
-    void add(Movie mov);//adds movie to vector
+    void add(TElem mov);//adds movie to vector
 
-    void remove(std::string title, int year);//removes movie from vector
+    void resize();
 
-    void update(std::string title, int year, std::string newtitle, std::string newgenre, int newyear,
-                int newlikes, std::string newtrailer);
+    void remove(int index);//removes movie from vector
 
-    Movie getElem(int index);
+    void update(int index, TElem mov);
+
+    TElem getElem(int index);
 
     int length();//returns vector size
 
@@ -48,17 +49,98 @@ public:
 
 };
 
+template <typename TElem>
+DynamicVector<TElem>::DynamicVector() {
+    this->capacity = 10;
+    this->elems = new Movie[this->capacity];
+    this->size = 0;
+}
+
+template <typename TElem>
+DynamicVector<TElem>::DynamicVector(int capacity) {
+    this->capacity = capacity;
+    this->elems = new Movie[this->capacity];
+    this->size = 0;
+}
+
+template <typename TElem>
+DynamicVector<TElem>::~DynamicVector() {
+    delete[] this->elems;
+}
+
+template <typename TElem>
+void DynamicVector<TElem>::debugPrint() {
+    for(int i = 0; i < this->size; i++){
+        std::cout << "Title: " << this->elems[i].getTitle() << "\n";
+        std::cout << "Genre: " << this->elems[i].getGenre() << "\n";
+        std::cout << "Year: " << this->elems[i].getYear() << "\n";
+        std::cout << "Likes: " << this->elems[i].getLikes() << "\n";
+        std::cout << "Trailer: " << this->elems[i].getTrailer() << "\n";
+        std::cout <<"\n";
+    }
+}
+
+
+template <typename TElem>
+void DynamicVector<TElem>::resize() {
+    this->capacity*=2;
+    TElem* newElems = new TElem[this->capacity];
+    for ( int i = 0; i < this->size; i++)
+        newElems[i] = this->elems[i];
+    delete[] this->elems;
+    this->elems = newElems;
+}
+
+template <typename TElem>
+void DynamicVector<TElem>::add(TElem mov) {
+    if (this->size >= this->capacity){
+        this->resize();
+    }
+    this->elems[this->size] = mov;
+    this->size++;
+}
+
+template <typename TElem>
+void DynamicVector<TElem>::remove(int index) {
+    if (index != -1){
+        for (int j = index; j < this->size - 1; j ++ ) {
+            this->elems[j] = this->elems[j+1];
+        }
+        this->size--;
+    }
+}
+
+template <typename TElem>
+void DynamicVector<TElem>::update(int index, TElem mov) {
+    this->elems[index] = mov;
+}
+
+template <typename TElem>
+int DynamicVector<TElem>::length() {
+    return this->size;
+}
+
+template <typename TElem>
+TElem DynamicVector<TElem>::getElem(int index) {
+    return this->elems[index];
+}
+
 
 class Repository{
-    friend class DynamicVector;
+    friend class DynamicVector <Movie>;
 private:
-    DynamicVector v;
-
-    DynamicVector watchlist;
+    //DynamicVector <Movie> v;
+    std::vector<Movie> v;
+    std::vector<Movie> watchlist;
+    //DynamicVector <Movie> watchlist;
 public:
 
     //constructor
     Repository();
+
+    int findIndex(std::string title, int year);
+
+
 
     bool inVector(std::string title, int year);//return true if movie in vector, false otherwise
 
@@ -72,13 +154,12 @@ public:
 
     void add_to_watch(std::string title, std::string genre, int year, int likes, std::string trailer);
 
-    DynamicVector* getwatchlist();
+    std::vector <Movie>* getwatchlist();
 
-    DynamicVector* getList();
+    std::vector <Movie>* getList();
 
     //destructor
     ~Repository();
 };
-// todo class Repository, contains dynamic vector as watch list and one as database
 
 #endif //LAB4_REPOSITORY_H

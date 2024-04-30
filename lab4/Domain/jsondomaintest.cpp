@@ -7,6 +7,7 @@
 #include "../nlohmann/json.hpp"
 #include <fstream>
 #include <iostream>
+#include <assert.h>
 
 
 //void test() {
@@ -58,7 +59,11 @@ void test() {
     newmov.setYear(j["year"].template get<int>());
     newmov.setLikes(j["likes"].template get<int>());
 
-    std::cout << "Title: " << newmov.getTitle() << "\n";
+    assert(newmov.getTitle() == mov.getTitle());
+    assert(newmov.getGenre() == mov.getGenre());
+    assert(newmov.getLikes() == mov.getLikes());
+    assert(newmov.getTrailer() == mov.getTrailer());
+    assert(newmov.getYear() == mov.getYear());
 
 }
 
@@ -104,7 +109,7 @@ void jsontest2(){
         newelems[i].setYear(jin[i]["year"].template get<int>());
         newelems[i].setLikes(jin[i]["likes"].template get<int>());
     }
-    //todo implement for main project
+
     //it works!
 
 //    for (int i = 0; i < 2; i++){
@@ -121,8 +126,5 @@ void jsontest2(){
 }
 
 void testloadjson(){
-    auto elems = new Movie[2];
-    nlohmann::json j;
 
-    delete[] elems;
 }

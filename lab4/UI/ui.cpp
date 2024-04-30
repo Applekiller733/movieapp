@@ -11,7 +11,7 @@
 #include <limits>
 #include <stdlib.h>
 #include "ui.h"
-
+#include "../Services/services.h"
 
 
 
@@ -19,24 +19,6 @@ UI::UI() {
 
 }
 
-//int UI::wordcnt(const char *sentence){
-//    if (sentence == NULL)
-//        return -1;
-//    int cnt = 0;
-//    bool inspace = true;
-//    while(*sentence != '\0'){
-//        if (std::isspace(*sentence)){
-//            inspace = true;
-//        }
-//        else{
-//            if (inspace == true)
-//                cnt++;
-//            inspace = false;
-//        }
-//        ++sentence;
-//    }
-//    return cnt;
-//}
 
 void UI::initialize_repo() {
     /*
@@ -62,14 +44,14 @@ void UI::start() {
     std::cout << "Do you wish to load movie list from file? Y/N\n";
     std::getline(std::cin, inp);
     if (inp == "Y" || inp == "y" || inp == "yes" || inp == "YES")
-        this->serv.read_from_json("movielist");
+        this->serv.read_from_json("movielist", "movielist.json");
     else
         this->initialize_repo();
 
     std::cout << "Do you wish to load watch list from file? Y/N\n";
     std::getline(std::cin, inp);
     if (inp == "Y" || inp == "y" || inp == "yes" || inp == "YES")
-        this->serv.read_from_json("watchlist");
+        this->serv.read_from_json("watchlist", "watchlist.json");
 
     this->login();
 }
@@ -113,7 +95,6 @@ void UI::adminmode() {
         std::cout << "Admin cmmd:>";
         std::getline(std::cin, command);
         if (command == "add"){
-            //sanitize trailer inputs to avoid malicious redirects / RCEs DONE
             std:: cout <<"Title: ";
             std::getline(std::cin, title);
             std::cout << "Genre: ";
@@ -177,11 +158,11 @@ void UI::adminmode() {
                          "Make sure trailer redirects to domain https://www.youtube.com/\n";
         }
         else if (command == "ls" || command == "list"){
-            DynamicVector *v;
+            std::vector<Movie> *v;
             v = serv.getList_s();
-            if (v->length() > 0) {
-                for (int ind = 0; ind < v->length(); ind++) {
-                    Movie tmpmov = v->getElem(ind);
+            if (v->size() > 0) {
+                for (int ind = 0; ind < v->size(); ind++) {
+                    Movie tmpmov = v->at(ind);
                     std::cout << "Title: " << tmpmov.getTitle() << "\n";
                     std::cout << "Genre: " << tmpmov.getGenre() << "\n";
                     std::cout << "Year: " << tmpmov.getYear() << "\n";
@@ -198,7 +179,7 @@ void UI::adminmode() {
             std::cout << "Do you wish to save movie list to file? Y/N\n";
             std::getline(std::cin, exitinp);
             if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("movielist");
+                this->serv.write_to_json("movielist", "movielist.json");
             this->login();
         }
         else if (command == "exit" || command == "q"){
@@ -206,7 +187,7 @@ void UI::adminmode() {
             std::cout << "Do you wish to save movie list to file? Y/N\n";
             std::getline(std::cin, exitinp);
             if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("movielist");
+                this->serv.write_to_json("movielist", "movielist.json");
             exit(0);
         }
         else {
@@ -234,22 +215,24 @@ void UI::usermode() {
             std::cout << "Insert movie genre: ";
             std::getline(std::cin, inpgenre);
 
-            DynamicVector res = this->serv.movies_by_genre(inpgenre);
-            for(int ind = 0; ind < res.length(); ind++)
+            std::vector<Movie> res = this->serv.movies_by_genre(inpgenre);
+            for(int ind = 0; ind < res.size(); ind++)
             {
                 std::string yn;
-                std::cout << "Title: " << res.getElem(ind).getTitle() << "\n";
-                std::cout << "Trailer: " << res.getElem(ind).getTrailer() << "\n";
+                std::cout << "Title: " << res.at(ind).getTitle() << "\n";
+                std::cout << "Trailer: " << res.at(ind).getTrailer() << "\n";
                 std::cout << "Click to watch\n";
+                std::string cmd = "open " + res.at(ind).getTrailer();
+                system(cmd.c_str());
                 std::cout << "\n\n Did you like the trailer? y/n \n";
                 std::getline(std::cin, yn);
                 std::string title, genre, trailer;
                 int likes, year;
-                title = res.getElem(ind).getTitle();
-                genre = res.getElem(ind).getGenre();
-                year = res.getElem(ind).getYear();
-                likes = res.getElem(ind).getLikes();
-                trailer = res.getElem(ind).getTrailer();
+                title = res.at(ind).getTitle();
+                genre = res.at(ind).getGenre();
+                year = res.at(ind).getYear();
+                likes = res.at(ind).getLikes();
+                trailer = res.at(ind).getTrailer();
                 if (yn == "y" || yn == "Y" || yn == "Yes" || yn == "yes" || yn == "YES"){
                     this->serv.update_s(title, year, title, genre, year, likes+1, trailer);
                     this->serv.add_watch_s(title, genre, year, likes, trailer);
@@ -259,17 +242,17 @@ void UI::usermode() {
             }
         }
         else if (inp == "2"){
-            DynamicVector* watch;
+            std::vector<Movie>* watch;
             watch = this->serv.getwatchlist_s();
-            if (watch->length() == 0)
+            if (watch->size() == 0)
                 std::cout << "List is empty! \n";
-            for (int ind = 0; ind < watch->length(); ind++)
+            for (int ind = 0; ind < watch->size(); ind++)
             {
-                std::cout << "Title: " << watch->getElem(ind).getTitle() << "\n";
-                std::cout << "Genre: " << watch->getElem(ind).getGenre() << "\n";
-                std::cout << "Year: " << watch->getElem(ind).getYear() << "\n";
-                std::cout << "Likes: " << watch->getElem(ind).getLikes() << "\n";
-                std::cout << "Trailer: " << watch->getElem(ind).getTrailer() << "\n";
+                std::cout << "Title: " << watch->at(ind).getTitle() << "\n";
+                std::cout << "Genre: " << watch->at(ind).getGenre() << "\n";
+                std::cout << "Year: " << watch->at(ind).getYear() << "\n";
+                std::cout << "Likes: " << watch->at(ind).getLikes() << "\n";
+                std::cout << "Trailer: " << watch->at(ind).getTrailer() << "\n";
                 std::cout << "\n";
             }
         }
@@ -278,7 +261,7 @@ void UI::usermode() {
             std::cout << "Do you wish to save watch list to file? Y/N\n";
             std::getline(std::cin, exitinp);
             if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("watchlist");
+                this->serv.write_to_json("watchlist", "watchlist.json");
             exit(0);
         }
         else if (inp == "bck" || inp == "out") {
@@ -286,7 +269,7 @@ void UI::usermode() {
             std::cout << "Do you wish to save watch list to file? Y/N\n";
             std::getline(std::cin, exitinp);
             if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("watchlist");
+                this->serv.write_to_json("watchlist", "watchlist.json");
 
             this->login();
         }
