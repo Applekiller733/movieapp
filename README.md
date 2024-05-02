@@ -4,11 +4,11 @@ A C++ app which allows operator to choose between access modes (admin/user).
 
 admin access allows operator to add, remove or update elements of the movies list, which the operator can load/save to a JSON file.
 
-user access allows operator to see movies one by one by genre, look at their trailers through a (youtube) link and add movies to their watch list, which they can likewise load/save to a JSON file.
+user access allows operator to see movies one by one by genre, look at their trailers through a [Youtube link](https://www.youtube.com/) and add movies to their watch list, which they can likewise load/save to a JSON file.
 
 
 
-
+## Development
 
 -v0.1 initial commit
 
@@ -21,16 +21,16 @@ user access allows operator to see movies one by one by genre, look at their tra
 
 
 
-  Roadmap:
+##  Roadmap:
 
-  **Adding CSV/HTML output files
+  * Adding CSV/HTML output files
 
-  **Refurbishing exceptions/validations in project
+  * Refurbishing exceptions/validations in project
 
-  **Creating UML Diagram
+  * Creating UML Diagram
 
-  **Creating proper GUI
+  * Creating proper GUI
 
-  **Switching from Nlohmann to Qt for json files
+  * Switching from Nlohmann to Qt for json files
 
-  **Adding MySQL database
+  * Adding MySQL database
