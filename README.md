@@ -8,6 +8,8 @@ user access allows operator to see movies one by one by genre, look at their tra
 
 
 
+
+
 -v0.1 initial commit
 
 -v0.2 switched to using STL vector
@@ -15,6 +17,8 @@ user access allows operator to see movies one by one by genre, look at their tra
 -v0.3 fixed filepaths, adapted app to windows, switched to c++11 range-based for loops/other STL methods
 
   ~~filepath of the JSON files is (my) full dir path. I will ammend this in the future.~~ No longer an issue
+
+
 
 
   Roadmap:
