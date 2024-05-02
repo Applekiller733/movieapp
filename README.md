@@ -19,10 +19,14 @@ user access allows operator to see movies one by one by genre, look at their tra
 
   Roadmap:
 
-    **Adding CSV/HTML output files
+  **Adding CSV/HTML output files
 
-    **Refurbishing exceptions/validations in project
+  **Refurbishing exceptions/validations in project
 
-    **Creating UML Diagram
+  **Creating UML Diagram
 
-    **Creating proper GUI
+  **Creating proper GUI
+
+  **Switching from Nlohmann to Qt for json files
+
+  **Adding MySQL database
