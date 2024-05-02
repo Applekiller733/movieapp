@@ -4,61 +4,48 @@
 
 #include "domain.h"
 #include <stdlib.h>
-#include <string>
 #include <string.h>
 
 Movie::Movie(){
+    this->genre = new char[100];
+    this->title = new char[100];
+    this->trailer = new char[256];
 }
 
-Movie::Movie(std::string title, std::string genre, int year, int likes, std::string trailer) {
-    this->title = title;
-    this->genre = genre;
-    this->trailer = trailer;
+Movie::Movie(char* title, char* genre, int year, int likes, char* trailer) {
+    this->genre = new char[100];
+    this->title = new char[100];
+    this->trailer = new char[256];
+    strcpy(this->title, title);
+    strcpy(this->genre, genre);
+    strcpy(this->trailer, trailer);
     this->year = year;
     this->likes = likes;
 }
 
 Movie::~Movie() {
+    delete[] this->trailer;
+    delete[] this->genre;
+    delete[] this->title;
 }
 
-std::string Movie::getTitle() {
+char *Movie::getTitle() {
     return this->title;
 }
 
-void Movie::setTitle(std::string newtitle) {
-    this->title = newtitle;
-}
-
-std::string Movie::getGenre() {
+char *Movie::getGenre() {
     return this->genre;
 }
 
-void Movie::setGenre(std::string newgenre) {
-    this->genre = newgenre;
+int *Movie::getYear() {
+    return &this->year;
 }
 
-int Movie::getYear() {
-    return this->year;
+int *Movie::getLikes() {
+    return &this->likes;
 }
 
-void Movie::setYear(int newyear) {
-    this->year = newyear;
-}
-
-int Movie::getLikes() {
-    return this->likes;
-}
-
-void Movie::setLikes(int newlikes) {
-    this->likes = newlikes;
-}
-
-std::string Movie::getTrailer() {
+char *Movie::getTrailer() {
     return this->trailer;
 }
-
-void Movie::setTrailer(std::string newtrailer){
-    this->trailer = newtrailer;
-}
-
 

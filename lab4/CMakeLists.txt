@@ -4,19 +4,13 @@ project(lab4)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(lab4 main.cpp
+        UI/ui.cpp
+        UI/ui.h
         Domain/domain.cpp
         Domain/domain.h
+        Services/services.cpp
+        Services/services.h
         Repository/repository.cpp
         Repository/repository.h
         Repository/repotests.cpp
-        Repository/repotests.h
-        Services/services.cpp
-        Services/services.h
-        UI/ui.cpp
-        UI/ui.h
-        Services/servicestests.cpp
-        Services/servicestests.h
-        Domain/jsondomaintest.cpp
-        Domain/jsondomaintest.h
-        Services/jsonservicestests.cpp
-        Services/jsonservicestests.h)
+        Repository/repotests.h)

@@ -6,67 +6,90 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
-#include <string>
-#include "../nlohmann/json.hpp"
 
-
-//Dynamic Vector
-
-
-
-
-
-
-//Repository
-
-Repository::Repository() {
-
+DynamicVector::DynamicVector(int capacity) {
+    this->elems = new Movie[this->capacity];
+    this->capacity = capacity;
+    this->size = 0;
 }
 
-Repository::~Repository() {
-
+DynamicVector::~DynamicVector() {
+    delete[] this->elems;
 }
 
-std::vector<Movie>* Repository::getList() {
-    return &this->v;
+void DynamicVector::debugPrint() {
+    for(int i = 0; i < this->size; i++){
+        std::cout << "Title: " << this->elems[i].getTitle() << "\n";
+        std::cout << "Genre: " << this->elems[i].getGenre() << "\n";
+        std::cout << "Year: " << *this->elems[i].getYear() << "\n";
+        std::cout << "Likes: " << *this->elems[i].getLikes() << "\n";
+        std::cout << "Trailer: " << this->elems[i].getTrailer() << "\n";
+        std::cout <<"\n";
+    }
 }
 
-std::vector<Movie> *Repository::getwatchlist() {
-    return &this->watchlist;
-}
-
-int Repository::findIndex(std::string title, int year) {
-    for ( int i = 0; i < this->getList()->size(); i ++){
-        if (this->v[i].getTitle() == title && this->v[i].getYear() == year)
+int DynamicVector::findIndex(char *title, int year) {
+    for(int i = 0; i < this->size; i++){
+        if (strcmp(this->elems[i].getTitle(), title) == 0 && *this->elems[i].getYear() == year)
             return i;
     }
     return -1;
 }
 
-bool Repository::inVector(std::string title, int year) {
-    if(this->findIndex(title, year) != -1)
-        return true;
-    return false;
+void DynamicVector::copyElem(int index, Movie elem) {
+    strcpy(this->elems[index].getTitle(), elem.getTitle());
+    strcpy(this->elems[index].getGenre(), elem.getGenre());
+    strcpy(this->elems[index].getTrailer(), elem.getTrailer());
+    *this->elems[index].getYear() = *elem.getYear();
+    *this->elems[index].getLikes() = *elem.getLikes();
 }
 
-void Repository::add_repo(std::string title, std::string genre, int year, int likes, std::string trailer) {
-    Movie newmov(title, genre, year, likes, trailer);
-    this->v.push_back(newmov);
+void DynamicVector::add(Movie mov) {
+
+    if (this->size >= this->capacity){
+        this->capacity++;
+
+        Movie* newElems = new Movie[this->capacity];
+
+        for (int i = 0; i < this->size; i++)
+        {
+            strcpy(newElems[i].getTitle(), this->elems[i].getTitle());
+            strcpy(newElems[i].getGenre(), this->elems[i].getGenre());
+            strcpy(newElems[i].getTrailer(), this->elems[i].getTrailer());
+            *newElems[i].getYear() = *this->elems[i].getYear();
+            *newElems[i].getLikes() = *this->elems[i].getLikes();
+        }
+
+        std::cout << "successfully moved elems\n";
+        delete[] this->elems;
+        std::cout << "successfully deleted old array\n";
+        this->elems = newElems;
+        std::cout << "successfully reallocated array\n";
+    }
+    //this->copyElem(this->size, mov);
+    strcpy(this->elems[this->size].getTitle(), mov.getTitle());
+    strcpy(this->elems[this->size].getGenre(), mov.getGenre());
+    strcpy(this->elems[this->size].getTrailer(), mov.getTrailer());
+    *this->elems[this->size].getYear() = *mov.getYear();
+    *this->elems[this->size].getLikes() = *mov.getLikes();
+
+    std::cout << "successfully added new element\n";
+    this->size++;
+    this->debugPrint();
+
 }
 
-void Repository::remove_repo(std::string title, int year) {
-    int index = this->findIndex(title, year);
-    this->v.erase(v.begin()+index);
+void DynamicVector::remove(char* title, int year) {
+    int ind = this->findIndex(title, year);
+    if (ind != -1){
+
+        for (int j = ind; j < this->size - 1; j ++ )
+            this->copyElem(j, this->elems[j+1]);
+
+        this->size--;
+    }
 }
 
-void Repository::update_repo(std::string title, int year, std::string newtitle, std::string newgenre, int newyear,
-                             int newlikes, std::string newtrailer) {
-    int index = this->findIndex(title, year);
-    Movie newmov(newtitle, newgenre, newyear, newlikes, newtrailer);
-    this->v[index] = newmov;
-}
-
-void Repository::add_to_watch(std::string title, std::string genre, int year, int likes, std::string trailer) {
-    Movie newmov(title, genre, year, likes, trailer);
-    this->watchlist.push_back(newmov);
+int DynamicVector::length() {
+    return this->size;
 }

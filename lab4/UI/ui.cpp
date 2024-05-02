@@ -8,10 +8,8 @@
 
 #include <string>
 #include <cctype>
-#include <limits>
-#include <stdlib.h>
 #include "ui.h"
-#include "../Services/services.h"
+
 
 
 
@@ -19,58 +17,36 @@ UI::UI() {
 
 }
 
-
-void UI::initialize_repo() {
-    /*
-     * Initializes movie list with some movie entries*/
-    this->serv.add_s("Dune", "science fiction", 2021, 679000, "https://www.youtube.com/watch?v=n9xhJrPXop4");
-    this->serv.add_s("Whiplash", "drama", 2015, 65000, "https://www.youtube.com/watch?v=7d_jQycdQGo");
-    this->serv.add_s("Fight Club", "thriller", 1999, 19000, "https://www.youtube.com/watch?v=SUXWAEX2jlg");
-    this->serv.add_s("Black Swan", "horror", 2010, 94000, "https://www.youtube.com/watch?v=5jaI1XOB-bs");
-    this->serv.add_s("Dune 2", "science fiction", 2024, 422000, "https://www.youtube.com/watch?v=Way9Dexny3w");
-    this->serv.add_s("No Country for Old Men", "thriller", 2007, 27000, "https://www.youtube.com/watch?v=38A__WT3-o0");
-    this->serv.add_s("The Good, the Bad and the Ugly", "western", 1966, 10000, "https://www.youtube.com/watch?v=WCN5JJY_wiA");
-    this->serv.add_s("Blade Runner 2049", "science fiction", 2017, 262000, "https://www.youtube.com/watch?v=gCcx85zbxz4");
-    this->serv.add_s("Predator", "science fiction", 1987, 10000, "https://www.youtube.com/watch?v=X2hBYGwKh3I");
-    this->serv.add_s("Terminator", "science fiction", 1984, 16000, "https://www.youtube.com/watch?v=k64P4l2Wmeg");
+int UI::wordcnt(const char *sentence){
+    if (sentence == NULL)
+        return -1;
+    int cnt = 0;
+    bool inspace = true;
+    while(*sentence != '\0'){
+        if (std::isspace(*sentence)){
+            inspace = true;
+        }
+        else{
+            if (inspace == true)
+                cnt++;
+            inspace = false;
+        }
+        ++sentence;
+    }
+    return cnt;
 }
 
 void UI::start() {
-    /*
-     * Asks if operator wishes to load movie/watch lists from JSON files and then proceeds
-     * to login menu*/
-    std::string inp;
-
-    std::cout << "Do you wish to load movie list from file? Y/N\n";
-    std::getline(std::cin, inp);
-    if (inp == "Y" || inp == "y" || inp == "yes" || inp == "YES")
-        this->serv.read_from_json("movielist", "movielist.json");
-    else
-        this->initialize_repo();
-
-    std::cout << "Do you wish to load watch list from file? Y/N\n";
-    std::getline(std::cin, inp);
-    if (inp == "Y" || inp == "y" || inp == "yes" || inp == "YES")
-        this->serv.read_from_json("watchlist", "watchlist.json");
-
-    this->login();
-}
-
-void UI::login() {
-    /*
-     * Lets operator choose access mode (admin/user)*/
     bool cond = true;
     while (cond) {
-        std::string str;
+        char *str = (char*)malloc(sizeof(char) * 6);
         std::cout << "Which mode do you wish to access?\n";
-        std::getline(std::cin, str);
-        if (str == "1" || str == "admin") {
+        std::cin.getline(str, 6);
+        if (strcmp(str, "1") == 0 || strcmp(str, "admin") == 0) {
             cond = false;
-            //this->serv.write_to_json("movielist");
-            //this->serv.read_from_json("movielist");
             this->adminmode();
 
-        } else if (str == "2" || str == "user") {
+        } else if (strcmp(str, "2") == 0 || strcmp(str, "user") == 0) {
             cond = false;
             this->usermode();
 
@@ -81,200 +57,112 @@ void UI::login() {
 }
 
 void UI::adminmode() {
-    /*
-     * ADMIN access mode, where operator can add, remove, update movie list and save to JSON file*/
-    std::string command;
-    std::string title;
-    std::string genre;
-    std::string year;
-    std::string likes;
-    std::string trailer;
+
+    char* command = (char*)malloc(sizeof(char)*7);
+    char* title = (char*)malloc(sizeof(char)*100);
+    char* genre = (char*)malloc(sizeof(char)*100);
+    int year;
+    int likes;
+    char* trailer = (char*)malloc(sizeof(char)*256);
 
     while (true) {
 
         std::cout << "Admin cmmd:>";
-        std::getline(std::cin, command);
-        if (command == "add"){
+        std::cin.getline(command, 7);
+        //todo figure out why if inputting empty line, it crashes (mem access violation)
+        if (strcmp(command, "add") == 0){
             std:: cout <<"Title: ";
-            std::getline(std::cin, title);
+            std::cin.getline(title, 100);
             std::cout << "Genre: ";
-            std::getline(std::cin, genre);
+            std::cin.getline(genre, 100);
             std::cout << "Year: ";
-            std::getline(std::cin, year);
+            std::cin >> year;
             std::cout << "Likes: ";
-            std::getline(std::cin, likes);
+            std::cin >> likes;
+            std::cin.ignore(1);
             std::cout << "Trailer: ";
-            std::getline(std::cin, trailer);
+            std::cin.getline(trailer, 256);
 
-            bool added = serv.add_s(title, genre, stoi(year), stoi(likes), trailer);
-            if (!added)
-                std::cout << "Invalid movie \n";
+
+            //todo add validator
+            //todo add function
         }
-        else if (command == "remove" || command == "rmv"){
+        else if (strcmp(command, "remove") == 0 || strcmp(command, "rmv") == 0){
 
             std::cout << "Title: ";
-            std::getline(std::cin, title);
+            std::cin.getline(title, 100);
             std::cout << "Year: ";
-            std::getline(std::cin, year);
+            std::cin >> year;
+            std::cin.ignore(1);
 
-            serv.remove_s(title, stoi(year));
+            //todo add validator
+            //todo add func
         }
-        else if (command == "update" || command == "updt"){
+        else if (strcmp(command, "update") == 0 || strcmp(command, "updt") == 0){
             std::cout << "Title: ";
-            std::getline(std::cin, title);
+            std::cin.getline(title, 100);
             std::cout << "Year: ";
-            std::getline(std::cin, year);
+            std::cin >> year;
+            std::cin.ignore(1);
 
 
             std::cout << "Insert new data/>\n";
-            std::string newtitle;
-            std::string newgenre;
-            std::string newtrailer;
-            std::string newyear;
-            std::string newlikes;
+            char* newtitle = (char*)malloc(sizeof(char)*100);
+            char* newgenre = (char*)malloc(sizeof(char)*100);
+            char* newtrailer = (char*)malloc(sizeof(char)*256);
+            int newyear;
+            int newlikes;
 
             std::cout <<"New Title: ";
-            std::getline(std::cin, newtitle);
+            std::cin.getline(newtitle, 100);
             std::cout << "New Genre: ";
-            std::getline(std::cin, newgenre);
+            std::cin.getline(newgenre, 100);
             std::cout << "New Year: ";
-            std::getline(std::cin, newyear);
+            std::cin >> newyear;
+            std::cin.ignore(1);
             std::cout << "New Likes: ";
-            std::getline(std::cin, newlikes);
-            std::cout << "New Trailer: ";
-            std::getline(std::cin, newtrailer);
+            std::cin >> newlikes;
+            std::cin.ignore(1);
 
-            serv.update_s(title, stoi(year), newtitle, newgenre, stoi(newyear), stoi(newlikes), newtrailer);
+            //todo finish
         }
-        else if (command == "help"){
+        else if (strcmp(command, "help") == 0){
             std::cout << "List of commands:\n"
                          "\t1. add\n"
                          "\t2.remove || rmv \n"
                          "\t3.update || updt \n"
                          "\t4.list || ls \n"
-                         "\t5.bck || out\n"
-                         "\t6.exit || q \n"
+                         "\t5.exit || q \n";
+        }
+        else if (strcmp(command, "list") == 0 || strcmp(command, "ls") == 0){
 
-                         "Make sure trailer redirects to domain https://www.youtube.com/\n";
+            //todo add connection to services/repo list
         }
-        else if (command == "ls" || command == "list"){
-            std::vector<Movie> *v;
-            v = serv.getList_s();
-            if (v->size() > 0) {
-                for (int ind = 0; ind < v->size(); ind++) {
-                    Movie tmpmov = v->at(ind);
-                    std::cout << "Title: " << tmpmov.getTitle() << "\n";
-                    std::cout << "Genre: " << tmpmov.getGenre() << "\n";
-                    std::cout << "Year: " << tmpmov.getYear() << "\n";
-                    std::cout << "Likes: " << tmpmov.getLikes() << "\n";
-                    std::cout << "Trailer: " << tmpmov.getTrailer() << "\n";
-                    std::cout << "\n";
-                }
-            }
-            else
-                std::cout << "Repository is empty\n";
-        }
-        else if (command == "bck" || command == "out") {
-            std::string exitinp;
-            std::cout << "Do you wish to save movie list to file? Y/N\n";
-            std::getline(std::cin, exitinp);
-            if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("movielist", "movielist.json");
-            this->login();
-        }
-        else if (command == "exit" || command == "q"){
-            std::string exitinp;
-            std::cout << "Do you wish to save movie list to file? Y/N\n";
-            std::getline(std::cin, exitinp);
-            if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("movielist", "movielist.json");
+        else if (strcmp(command, "exit") == 0 || strcmp(command, "q") == 0){
             exit(0);
         }
-        else {
-            std::cout << "Invalid command\n";
-            //std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        }
+        else
+            std::cout<<"Invalid command\n";
     }
 }
 
 void UI::usermode() {
-    /*
-     * USER access mode, where user can see movies by genre, add movies to watch list and save current
-     * watch list to JSON file*/
     while(true){
         std::cout << "Welcome to the movie app!\n"
                      "\t1.See movies by genre\n"
                      "\t2.See watch list\n"
-                     "\t3.Exit\n"
-                     "\n"
-                     "\tbck - back to login screen\n";
-        std::string inp;
-        std::getline(std::cin, inp);
-        if (inp == "1"){
-            std::string inpgenre;
-            std::cout << "Insert movie genre: ";
-            std::getline(std::cin, inpgenre);
-
-            std::vector<Movie> res = this->serv.movies_by_genre(inpgenre);
-            for(int ind = 0; ind < res.size(); ind++)
-            {
-                std::string yn;
-                std::cout << "Title: " << res.at(ind).getTitle() << "\n";
-                std::cout << "Trailer: " << res.at(ind).getTrailer() << "\n";
-                std::cout << "Click to watch\n";
-                std::string cmd = "open " + res.at(ind).getTrailer();
-                system(cmd.c_str());
-                std::cout << "\n\n Did you like the trailer? y/n \n";
-                std::getline(std::cin, yn);
-                std::string title, genre, trailer;
-                int likes, year;
-                title = res.at(ind).getTitle();
-                genre = res.at(ind).getGenre();
-                year = res.at(ind).getYear();
-                likes = res.at(ind).getLikes();
-                trailer = res.at(ind).getTrailer();
-                if (yn == "y" || yn == "Y" || yn == "Yes" || yn == "yes" || yn == "YES"){
-                    this->serv.update_s(title, year, title, genre, year, likes+1, trailer);
-                    this->serv.add_watch_s(title, genre, year, likes, trailer);
-                }
-                else if (yn == "q" || yn == "exit")
-                    break;
-            }
+                     "\t3.Exit\n";
+        int inp = -1;
+        std::cin >> inp;
+        if (inp == 1){
+        //todo load movies by genre one by one
+        //todo add the other functionalities
         }
-        else if (inp == "2"){
-            std::vector<Movie>* watch;
-            watch = this->serv.getwatchlist_s();
-            if (watch->size() == 0)
-                std::cout << "List is empty! \n";
-            for (int ind = 0; ind < watch->size(); ind++)
-            {
-                std::cout << "Title: " << watch->at(ind).getTitle() << "\n";
-                std::cout << "Genre: " << watch->at(ind).getGenre() << "\n";
-                std::cout << "Year: " << watch->at(ind).getYear() << "\n";
-                std::cout << "Likes: " << watch->at(ind).getLikes() << "\n";
-                std::cout << "Trailer: " << watch->at(ind).getTrailer() << "\n";
-                std::cout << "\n";
-            }
+        else if (inp == 2){
+        //todo see watch list
         }
-        else if (inp == "3"){
-            std::string exitinp;
-            std::cout << "Do you wish to save watch list to file? Y/N\n";
-            std::getline(std::cin, exitinp);
-            if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("watchlist", "watchlist.json");
+        else if (inp == 3){
             exit(0);
-        }
-        else if (inp == "bck" || inp == "out") {
-            std::string exitinp;
-            std::cout << "Do you wish to save watch list to file? Y/N\n";
-            std::getline(std::cin, exitinp);
-            if (exitinp == "y" || exitinp == "Y" || exitinp == "yes" || exitinp == "YES")
-                this->serv.write_to_json("watchlist", "watchlist.json");
-
-            this->login();
-        }
-        else {
-            std::cout << "Invalid input\n";
         }
     }
 }
