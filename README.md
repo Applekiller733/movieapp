@@ -18,7 +18,11 @@ user access allows operator to see movies one by one by genre, look at their tra
 
 
   Roadmap:
+
     **Adding CSV/HTML output files
+
     **Refurbishing exceptions/validations in project
+
     **Creating UML Diagram
+
     **Creating proper GUI
