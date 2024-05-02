@@ -6,5 +6,8 @@ admin access allows operator to add, remove or update elements of the movies lis
 
 user access allows operator to see movies one by one by genre, look at their trailers through a (youtube) link and add movies to their watch list, which they can likewise load/save to a JSON file.
 
+-v0.1 initial commit
+-v0.2 switched to using STL vector
+
 CURRENT ISSUE!:
   filepath of the JSON files is (my) full dir path. I will ammend this in the future.
