@@ -6,6 +6,7 @@ admin access allows operator to add, remove or update elements of the movies lis
 
 user access allows operator to see movies one by one by genre, look at their trailers through a [Youtube link](https://www.youtube.com/) and add movies to their watch list, which they can likewise load/save to a JSON file.
 
+The user's saved watchlist can then be displayed either in Excel or in the user's browser in the form of a table.
 
 
 ## Development
