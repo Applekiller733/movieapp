@@ -16,6 +16,8 @@ user access allows operator to see movies one by one by genre, look at their tra
 
 -v0.3 fixed filepaths, adapted app to windows, switched to c++11 range-based for loops/other STL methods
 
+-v0.4 added CSV/HTML output file saving and proper display using excel/broswer
+
   ~~filepath of the JSON files is (my) full dir path. I will ammend this in the future.~~ No longer an issue
 
 
@@ -23,7 +25,7 @@ user access allows operator to see movies one by one by genre, look at their tra
 
 ##  Roadmap:
 
-  * Adding CSV/HTML output files
+  * ~~Adding CSV/HTML output files~~ DONE
 
   * Refurbishing exceptions/validations in project
 
