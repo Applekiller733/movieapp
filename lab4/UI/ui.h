@@ -18,8 +18,12 @@ private:
 
     void initialize_repo();
 
+    void initialize_output_type();
+
     void savemovies();
     void savewatch();
+
+    void saveoutputfile();
 
 public:
     UI(); //constructor

@@ -37,7 +37,8 @@ std::vector<Movie> *Repository::getwatchlist() {
 
 int Repository::findIndex(std::string title, int year) {
     for ( int i = 0; i < this->getList()->size(); i ++){
-        if (this->v[i].getTitle() == title && this->v[i].getYear() == year)
+        auto& mov = this->v[i];
+        if (mov.getTitle() == title && mov.getYear() == year)
             return i;
     }
     return -1;

@@ -48,23 +48,7 @@ void UI::start() {
      * Asks if operator wishes to load movie/watch lists from JSON files and then proceeds
      * to login menu*/
     std::string inp;
-
-    while (true){
-        std::cout << "Choose watchlist output file format: \n"
-                     "\t1.CSV\n"
-                     "\t2.HTM\n";
-        std::getline(std::cin, inp);
-        if (inp == "1"){
-            this->outputfiletype = ".csv";
-            break;
-        }
-        else if (inp == "2")
-        {
-            this->outputfiletype = ".html";
-            break;
-        }
-        else std::cout << "Invalid input\n";
-    }
+    this->initialize_output_type();
 
     std::cout << "Do you wish to load movie list from JSON file? Y/N\n";
     std::getline(std::cin, inp);
@@ -79,6 +63,29 @@ void UI::start() {
         this->serv.read_from_json("watchlist", "watchlist.json");
 
     this->login();
+}
+
+void UI::initialize_output_type() {
+    //initializes the file output type (CSV/HTML)
+    std::string inp;
+    while (true){
+        std::cout << "Choose watchlist output file format: \n"
+                     "\t1.CSV\n"
+                     "\t2.HTM\n";
+        std::getline(std::cin, inp);
+        if (inp == "1"){
+            this->outputfiletype = "CSV";
+            this->serv.set_output_type(".csv");
+            break;
+        }
+        else if (inp == "2")
+        {
+            this->outputfiletype = "HTML";
+            this->serv.set_output_type(".html");
+            break;
+        }
+        else std::cout << "Invalid input\n";
+    }
 }
 
 void UI::login() {
@@ -229,7 +236,8 @@ void UI::usermode() {
         std::cout << "Welcome to the movie app!\n"
                      "\t1.See movies by genre\n"
                      "\t2.See watch list\n"
-                     "\t3.Exit\n"
+                     "\t3.Display watch list\n"
+                     "\t9.Exit\n"
                      "\n"
                      "\tbck - back to login screen\n";
         std::string inp;
@@ -283,6 +291,17 @@ void UI::usermode() {
             }
         }
         else if (inp == "3"){
+            this->serv.output_write_handler("watchlist");
+            std::string starter;
+            if ( this->outputfiletype == "CSV"){
+                starter = "";
+            }
+            else starter = "start ";
+            std::string cmd = starter + "..\\Services\\" + this->outputfiletype + "saves\\watchlist" +
+                    this->serv.get_outputfile_ext();
+            system(cmd.c_str());
+        }
+        else if (inp == "9"){
             std::string exitinp;
             std::cout << "Do you wish to save watch list to file? Y/N\n";
             std::getline(std::cin, exitinp);

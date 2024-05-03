@@ -108,40 +108,84 @@ void Services::write_to_json(std::string typelist, std::string filename) {
     }
 }
 
+void Services::json_add_handler(std::string typelist, Movie mov) {
+    if (typelist == "movielist"){
+        this->add_s(mov.getTitle(), mov.getGenre(), mov.getYear(), mov.getLikes(),
+                    mov.getTrailer());
+    }
+    else if (typelist == "watchlist"){
+        this->add_watch_s(mov.getTitle(), mov.getGenre(), mov.getYear(), mov.getLikes(),
+                          mov.getTrailer());
+    }
+}
+
 void Services::read_from_json(std::string typelist, std::string filename) {
 
         nlohmann::json jarr = nlohmann::json::array();
-        if (typelist == "movielist") {
-            std::ifstream in("..\\Services\\JSONsaves\\"+filename);
-            jarr = nlohmann::json::parse(in);
-            in.close();
-            for (auto i = jarr.begin(); i < jarr.end(); i++){
-                this->add_s(i->at("title").get<std::string>(),i->at("genre").get<std::string>(),
-                            i->at("year").get<int>(), i->at("likes").get<int>(),
-                            i->at("trailer").get<std::string>());
-            }
+        std::ifstream in("..\\Services\\JSONsaves\\"+filename);
+        jarr = nlohmann::json::parse(in);
+        in.close();
+        for (auto i = jarr.begin(); i < jarr.end(); i++){
+                auto mov = new Movie(i->at("title").get<std::string>(), i->at("genre").get<std::string>(),
+                                       i->at("year").get<int>(), i->at("likes").get<int>(),
+                                       i->at("trailer").get<std::string>());
+                this->json_add_handler(typelist, *mov);
         }
-        else if (typelist == "watchlist"){
-            std::ifstream in("..\\Services\\JSONsaves\\"+filename);
-            jarr = nlohmann::json::parse(in);
-            in.close();
-            for (auto i = jarr.begin(); i < jarr.end(); i++){
-                this->add_watch_s(i->at("title").get<std::string>(),i->at("genre").get<std::string>(),
-                            i->at("year").get<int>(), i->at("likes").get<int>(),
-                            i->at("trailer").get<std::string>());
-            }
-        }
-        else
-            return;
+}
 
+void Services::set_output_type(std::string type) {
+    this->outputfileext = type;
+}
+
+std::string Services::get_outputfile_ext() {
+    return this->outputfileext;
+}
+
+void Services::output_write_handler(std::string filename) {
+    if (this->outputfileext == ".csv"){
+        this->write_to_csv(filename);
+    }
+    else{
+        this->write_to_html(filename);
+    }
 }
 
 void Services::write_to_csv(std::string filename) {
-    //todo
+
+    std::ofstream fout("..\\Services\\CSVsaves\\" + filename + this->outputfileext);
+    for ( auto& mov : *this->getwatchlist_s()){
+        fout << mov.getTitle() << "," << mov.getGenre() << "," << mov.getYear() << ","
+            << mov.getLikes() << "," << mov.getTrailer() << "\n";
+    }
+    fout.close();
+}
+
+void Services::add_to_csv(std::string filename, Movie mov) {
+
 }
 
 void Services::write_to_html(std::string filename) {
-    //todo
+
+    std::ofstream fout("..\\Services\\HTMLsaves\\" + filename + this->outputfileext);
+    fout << "<!DOCTYPE HTML>\n";
+    fout << "<html>\n";
+    fout << "<head>\n"
+            "\t<title>Movie Watch List</title>"
+            "</head>\n";
+    fout << "<body>\n"
+            "<table border = \"1\">\n";
+    for ( auto& mov : *this->getwatchlist_s() ){
+        fout << "\t<tr>\n";
+        fout << "\t\t<td>" + mov.getTitle() + "</td>\n";
+        fout << "\t\t<td>" + mov.getGenre() + "</td>\n";
+        fout << "\t\t<td>" + std::to_string(mov.getYear()) + "</td>\n";
+        fout << "\t\t<td>" + std::to_string(mov.getLikes()) + "</td>\n";
+        fout << "\t\t<td><a href =" + mov.getTrailer() + ">Trailer</a></td>\n";
+        fout << "\t</tr>\n";
+    }
+    fout << "</table>\n"
+            "</body>\n"
+            "</html>\n";
 }
 
 void Services::debg_write() {

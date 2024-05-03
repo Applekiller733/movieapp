@@ -16,6 +16,8 @@ private:
 
     Repository repo;
 
+    std::string outputfileext;
+
     bool validate_movie(std::string title, int year);
 
     bool is_trailer_safe(std::string trailer) ;
@@ -36,10 +38,16 @@ public:
 
     std::vector<Movie> movies_by_genre(std::string genre);
 
+    void json_add_handler(std::string typelist, Movie mov);
     void read_from_json(std::string typelist, std::string filename);
     void write_to_json(std::string typelist, std::string filename);
 
+    std::string get_outputfile_ext();
+    void set_output_type(std::string type);
+    void output_write_handler(std::string filename);
     void write_to_csv(std::string filename);
+    void add_to_csv(std::string filename, Movie mov);
+    void delete_from_csv(std::string filename, Movie mov);
     void write_to_html(std::string filename);
 
     void debg_write();
