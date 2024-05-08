@@ -4,8 +4,11 @@
 #include "Services/servicestests.h"
 #include "Domain/jsondomaintest.h"
 #include "Services/jsonservicestests.h"
+#include "GUI/GUI.h"
 
-int main() {
+#include <QtWidgets/QApplication>
+
+int main(int argc, char* argv[]) {
     short_test();
     services_tests();
     //services_test_quantity();
@@ -23,6 +26,13 @@ int main() {
     //open CSV files in Excel/HTML files in browser
     //create UML diagram of program
 
-    UI ui;
-    ui.start();
+//    UI ui;
+//    ui.start();
+
+    QApplication app(argc, argv);
+    app.setApplicationName("Movieapp");
+    GUI gui;
+    gui.show();
+    return app.exec();
+
 }

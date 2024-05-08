@@ -3,7 +3,17 @@ project(lab4)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(lab4 main.cpp
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+
+
+add_executable(lab4
+        main.cpp
         Domain/domain.cpp
         Domain/domain.h
         Repository/repository.cpp
@@ -19,4 +29,8 @@ add_executable(lab4 main.cpp
         Domain/jsondomaintest.cpp
         Domain/jsondomaintest.h
         Services/jsonservicestests.cpp
-        Services/jsonservicestests.h)
+        Services/jsonservicestests.h
+        GUI/GUI.cpp
+        GUI/GUI.h)
+
+target_link_libraries(lab4 Qt6::Core Qt6::Widgets)

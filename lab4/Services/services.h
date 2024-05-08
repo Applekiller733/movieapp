@@ -22,7 +22,10 @@ private:
 
     bool is_trailer_safe(std::string trailer) ;
 
+
 public:
+
+    void initialize_repo();
 
     bool add_s(std::string title, std::string genre, int year, int likes, std::string trailer);
 
