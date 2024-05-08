@@ -19,6 +19,8 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
 
 -v0.4 added CSV/HTML output file saving and proper display using excel/broswer
 
+-v0.5 added a primitive, yet functional GUI
+
   ~~filepath of the JSON files is (my) full dir path. I will ammend this in the future.~~ No longer an issue
 
 
@@ -32,7 +34,7 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
 
   * Creating UML Diagram
 
-  * Creating proper GUI
+  * ~~Creating proper GUI~~ basic GUI complete, but further work required
 
   * Switching from Nlohmann to Qt for json files
 
