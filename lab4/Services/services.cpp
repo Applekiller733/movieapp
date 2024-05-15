@@ -52,8 +52,7 @@ bool Services::remove_s(std::string title, int year) {
     return false;
 }
 
-bool
-Services::update_s(std::string title, int year, std::string newtitle, std::string newgenre,
+bool Services::update_s(std::string title, int year, std::string newtitle, std::string newgenre,
                    int newyear, int newlikes,
                    std::string newtrailer) {
     if(!this->validate_movie(title, year))
@@ -149,12 +148,13 @@ void Services::read_from_json(std::string typelist, std::string filename) {
 
 void Services::set_output_type(std::string type) {
     this->outputfileext = type;
+    this->repo.set_output_type(type);
 }
 
 std::string Services::get_outputfile_ext() {
     return this->outputfileext;
 }
-
+//todo fix this mess
 void Services::output_write_handler(std::string filename) {
     if (this->outputfileext == ".csv"){
         this->write_to_csv(filename);
@@ -165,13 +165,7 @@ void Services::output_write_handler(std::string filename) {
 }
 
 void Services::write_to_csv(std::string filename) {
-
-    std::ofstream fout("..\\Services\\CSVsaves\\" + filename + this->outputfileext);
-    for ( auto& mov : *this->getwatchlist_s()){
-        fout << mov.getTitle() << "," << mov.getGenre() << "," << mov.getYear() << ","
-            << mov.getLikes() << "," << mov.getTrailer() << "\n";
-    }
-    fout.close();
+    this->repo.write_to_csv(filename);
 }
 
 void Services::add_to_csv(std::string filename, Movie mov) {
@@ -179,27 +173,7 @@ void Services::add_to_csv(std::string filename, Movie mov) {
 }
 
 void Services::write_to_html(std::string filename) {
-
-    std::ofstream fout("..\\Services\\HTMLsaves\\" + filename + this->outputfileext);
-    fout << "<!DOCTYPE HTML>\n";
-    fout << "<html>\n";
-    fout << "<head>\n"
-            "\t<title>Movie Watch List</title>"
-            "</head>\n";
-    fout << "<body>\n"
-            "<table border = \"1\">\n";
-    for ( auto& mov : *this->getwatchlist_s() ){
-        fout << "\t<tr>\n";
-        fout << "\t\t<td>" + mov.getTitle() + "</td>\n";
-        fout << "\t\t<td>" + mov.getGenre() + "</td>\n";
-        fout << "\t\t<td>" + std::to_string(mov.getYear()) + "</td>\n";
-        fout << "\t\t<td>" + std::to_string(mov.getLikes()) + "</td>\n";
-        fout << "\t\t<td><a href =" + mov.getTrailer() + ">Trailer</a></td>\n";
-        fout << "\t</tr>\n";
-    }
-    fout << "</table>\n"
-            "</body>\n"
-            "</html>\n";
+    this->repo.write_to_html(filename);
 }
 
 void Services::debg_write() {

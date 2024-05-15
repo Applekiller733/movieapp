@@ -126,12 +126,21 @@ TElem DynamicVector<TElem>::getElem(int index) {
 }
 
 
+class RepositoryException : public std::exception{
+private:
+    std::string message;
+public:
+    RepositoryException(const std::string message);
+    std::string getMessage() const;
+};
+
 class Repository{
     friend class DynamicVector <Movie>;
 private:
     //DynamicVector <Movie> v;
     std::vector<Movie> v;
     std::vector<Movie> watchlist;
+    std::string outputfileext;
     //DynamicVector <Movie> watchlist;
 public:
 
@@ -139,8 +148,6 @@ public:
     Repository();
 
     int findIndex(std::string title, int year);
-
-
 
     bool inVector(std::string title, int year);//return true if movie in vector, false otherwise
 
@@ -157,6 +164,12 @@ public:
     std::vector <Movie>* getwatchlist();
 
     std::vector <Movie>* getList();
+
+    std::string get_outputfile_ext();
+    void set_output_type(std::string type);
+
+    void write_to_csv(std::string filename);
+    void write_to_html(std::string filename);
 
     //destructor
     ~Repository();

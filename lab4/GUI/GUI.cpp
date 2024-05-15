@@ -62,8 +62,6 @@ void GUI::buildGUI() {
 
     mainLayout->addLayout(bottombuttonslayout, 1, 0, 1, 2);
 
-
-
 }
 
 void GUI::populatelist() {

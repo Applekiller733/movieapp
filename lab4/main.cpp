@@ -19,18 +19,22 @@ int main(int argc, char* argv[]) {
     // fix filepaths - DONE
     // fix link opening (use QT?) - DONE (windows only fix)
 
-    //TODO LIST:
-    //add exception classes, validators
-    //add CSV file saving
-    //add HTML file saving
-    //open CSV files in Excel/HTML files in browser
-    //create UML diagram of program
+//    TODO LIST:
+//    add exception classes, validators - DONE
+//    add CSV file saving - DONE
+//    add HTML file saving - DONE
+//    open CSV files in Excel/HTML files in browser - DONE
+//    create UML diagram of program
+//    migrate all file writing/reading to repository
+//    finish GUI
+//    refactor Repository and add polymorphism
 
 //    UI ui;
 //    ui.start();
 
     QApplication app(argc, argv);
     app.setApplicationName("Movieapp");
+    app.setStyle("fusion");
     GUI gui;
     gui.show();
     return app.exec();

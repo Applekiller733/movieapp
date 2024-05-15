@@ -45,8 +45,9 @@ public:
     void read_from_json(std::string typelist, std::string filename);
     void write_to_json(std::string typelist, std::string filename);
 
-    std::string get_outputfile_ext();
     void set_output_type(std::string type);
+    std::string get_outputfile_ext();
+
     void output_write_handler(std::string filename);
     void write_to_csv(std::string filename);
     void add_to_csv(std::string filename, Movie mov);

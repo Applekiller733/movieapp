@@ -8,13 +8,15 @@
 #include <string.h>
 #include <string>
 #include "../nlohmann/json.hpp"
+#include <fstream>
+//repo exception
+RepositoryException::RepositoryException(const std::string message) {
+    this->message = message;
+}
 
-
-//Dynamic Vector
-
-
-
-
+std::string RepositoryException::getMessage() const {
+    return this->message;
+}
 
 
 //Repository
@@ -70,4 +72,49 @@ void Repository::update_repo(std::string title, int year, std::string newtitle, 
 void Repository::add_to_watch(std::string title, std::string genre, int year, int likes, std::string trailer) {
     Movie newmov(title, genre, year, likes, trailer);
     this->watchlist.push_back(newmov);
+}
+
+void Repository::set_output_type(std::string type) {
+    this->outputfileext = type;
+}
+
+std::string Repository::get_outputfile_ext() {
+    return this->outputfileext;
+}
+
+void Repository::write_to_html(std::string filename) {
+    std::ofstream fout("..\\Services\\HTMLsaves\\" + filename + this->outputfileext);
+    if (!fout.is_open())
+        throw RepositoryException("File could not be opened!\n");
+
+    fout << "<!DOCTYPE HTML>\n";
+    fout << "<html>\n";
+    fout << "<head>\n"
+            "\t<title>Movie Watch List</title>"
+            "</head>\n";
+    fout << "<body>\n"
+            "<table border = \"1\">\n";
+    for ( auto& mov : this->watchlist ){
+        fout << "\t<tr>\n";
+        fout << "\t\t<td>" + mov.getTitle() + "</td>\n";
+        fout << "\t\t<td>" + mov.getGenre() + "</td>\n";
+        fout << "\t\t<td>" + std::to_string(mov.getYear()) + "</td>\n";
+        fout << "\t\t<td>" + std::to_string(mov.getLikes()) + "</td>\n";
+        fout << "\t\t<td><a href =" + mov.getTrailer() + ">Trailer</a></td>\n";
+        fout << "\t</tr>\n";
+    }
+    fout << "</table>\n"
+            "</body>\n"
+            "</html>\n";
+}
+
+void Repository::write_to_csv(std::string filename) {
+    std::ofstream fout("..\\Services\\CSVsaves\\" + filename + this->outputfileext);
+    if (!fout.is_open())
+        throw RepositoryException("File could not be opened!\n");
+    for ( auto& mov : this->watchlist){
+        fout << mov.getTitle() << "," << mov.getGenre() << "," << mov.getYear() << ","
+             << mov.getLikes() << "," << mov.getTrailer() << "\n";
+    }
+    fout.close();
 }
