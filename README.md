@@ -34,7 +34,7 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
 
   * Refurbishing exceptions/validations in project
 
-  * Creating UML Diagram
+  * ~~Creating UML Diagram~~ DONE
 
   * ~~Creating proper GUI~~ basic GUI complete, but further work required
 
