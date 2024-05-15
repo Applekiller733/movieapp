@@ -21,6 +21,8 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
 
 -v0.5 added a primitive, yet functional GUI
 
+-v0.51 added very small changes to code and changed GUI style slightly
+
   ~~filepath of the JSON files is (my) full dir path. I will ammend this in the future.~~ No longer an issue
 
 
@@ -39,3 +41,5 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
   * Switching from Nlohmann to Qt for json files
 
   * Adding MySQL database
+
+  * Refactoring Repository to use polymorphism
