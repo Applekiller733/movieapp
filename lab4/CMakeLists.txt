@@ -9,7 +9,8 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets WebView REQUIRED)
+
 
 
 add_executable(lab4
@@ -31,6 +32,7 @@ add_executable(lab4
         Services/jsonservicestests.cpp
         Services/jsonservicestests.h
         GUI/GUI.cpp
-        GUI/GUI.h)
+        GUI/GUI.h
+)
 
-target_link_libraries(lab4 Qt6::Core Qt6::Widgets)
+target_link_libraries(lab4 Qt6::Core Qt6::Widgets Qt6::WebView)

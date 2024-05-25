@@ -8,7 +8,7 @@
 
 void short_test(){
     //std::cout << "entered tests \n";
-    Repository repo;
+    Repository repo{"testmovielist.json"};
     //std::cout << "tests: successfully created vector\n";
     Movie mov1("Scufita Rosie", "comedie", 2024, 69, "https://cox.ro");
     //std::cout << "tests: successfully created movie\n";

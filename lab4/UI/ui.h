@@ -12,11 +12,9 @@ class UI {
 private:
     //int wordcnt(const char* sentence);
 
-    Services serv;
+    Services& serv;
 
     std::string outputfiletype;
-
-    void initialize_repo();
 
     void initialize_output_type();
 
@@ -26,7 +24,7 @@ private:
     void saveoutputfile();
 
 public:
-    UI(); //constructor
+    UI(Services* serv); //constructor
 
     void login();
 

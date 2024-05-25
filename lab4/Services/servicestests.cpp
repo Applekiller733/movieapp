@@ -9,7 +9,8 @@
 
 
 void services_tests(){
-    Services serv;
+    Repository repo{"testmovielist.json"};
+    Services serv{repo};
     serv.add_s("Scufita rosie", "comedie",2024, 69, "https://www.youtube.com/cox");
     assert(serv.add_s("Scufita rosie", "testgenre", 2024, 420, "https://www.youtube.com/") == false);
     //std::cout << "finished adding elem in services \n";

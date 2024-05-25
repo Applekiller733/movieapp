@@ -14,7 +14,7 @@ class Services{
 
 private:
 
-    Repository repo;
+    Repository& repo;
 
     std::string outputfileext;
 
@@ -24,8 +24,9 @@ private:
 
 
 public:
+    explicit Services(Repository& repo);
 
-    void initialize_repo();
+    void populate_repo();
 
     bool add_s(std::string title, std::string genre, int year, int likes, std::string trailer);
 
@@ -41,20 +42,13 @@ public:
 
     std::vector<Movie> movies_by_genre(std::string genre);
 
-    void json_add_handler(std::string typelist, Movie mov);
-    void read_from_json(std::string typelist, std::string filename);
-    void write_to_json(std::string typelist, std::string filename);
-
     void set_output_type(std::string type);
     std::string get_outputfile_ext();
 
-    void output_write_handler(std::string filename);
-    void write_to_csv(std::string filename);
-    void add_to_csv(std::string filename, Movie mov);
-    void delete_from_csv(std::string filename, Movie mov);
-    void write_to_html(std::string filename);
+    std::string get_movies_filename_s();
 
-    void debg_write();
+    void read_from_file_s(std::vector<Movie>* v, std::string filename);
+    void write_to_file_s(std::vector<Movie>* v, std::string filename);
 };
 
 #endif //LAB4_SERVICES_H

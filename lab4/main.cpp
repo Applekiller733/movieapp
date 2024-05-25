@@ -4,9 +4,12 @@
 #include "Services/servicestests.h"
 #include "Domain/jsondomaintest.h"
 #include "Services/jsonservicestests.h"
+#include "Repository/repository.h"
+#include "Services/services.h"
 #include "GUI/GUI.h"
 
 #include <QtWidgets/QApplication>
+#include <QtWebView/QtWebView>
 
 int main(int argc, char* argv[]) {
     short_test();
@@ -14,28 +17,36 @@ int main(int argc, char* argv[]) {
     //services_test_quantity();
     //test();
     //jsontest2();
-    jsonservicestests();
+    //jsonservicestests();
     //debg_write();
-    // fix filepaths - DONE
-    // fix link opening (use QT?) - DONE (windows only fix)
 
 //    TODO LIST:
-//    add exception classes, validators - DONE
-//    add CSV file saving - DONE
-//    add HTML file saving - DONE
-//    open CSV files in Excel/HTML files in browser - DONE
-//    create UML diagram of program
-//    migrate all file writing/reading to repository
-//    finish GUI
-//    refactor Repository and add polymorphism
+//     fix filepaths - DONE
+//     fix link opening (use QT?) - DONE (windows only fix)
+//     add exception classes, validators - DONE
+//     add CSV file saving - DONE
+//     add HTML file saving - DONE
+//     open CSV files in Excel/HTML files in browser - DONE
+//     create UML diagram of program - DONE
+//     migrate all file writing/reading to repository - DONE
+//     finish html/csv file reading for repository - 80%ish complete - still require HTML file reading
+//     finish GUI
+//     refactor Repository and add polymorphism - DONE
+//     refactor console UI?
+//     remake tests
+//     switch to Qt JSON instead of nlohmann
+
 
 //    UI ui;
 //    ui.start();
 
+    CSVRepository repo{"movielist.csv"};
+    Services serv{repo};
+    //QtWebView::initialize(); required for webview
     QApplication app(argc, argv);
     app.setApplicationName("Movieapp");
     app.setStyle("fusion");
-    GUI gui;
+    GUI gui{serv};
     gui.show();
     return app.exec();
 
