@@ -23,7 +23,9 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
 
 -v0.51 added very small changes to code and changed GUI style slightly
 
-  ~~filepath of the JSON files is (my) full dir path. I will ammend this in the future.~~ No longer an issue
+-v0.6 added polymorphism to repository, more work on GUI
+
+Note: console UI currently unavailable, requires refactoring
 
 
 
@@ -32,7 +34,7 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
 
   * ~~Adding CSV/HTML output files~~ DONE
 
-  * Refurbishing exceptions/validations in project
+  * ~~Refurbishing exceptions/validations in project~~
 
   * ~~Creating UML Diagram~~ DONE
 
@@ -42,4 +44,6 @@ The user's saved watchlist can then be displayed either in Excel or in the user'
 
   * Adding MySQL database
 
-  * Refactoring Repository to use polymorphism
+  * ~~Refactoring Repository to use polymorphism~~
+
+  * Adding web embedding to GUI
